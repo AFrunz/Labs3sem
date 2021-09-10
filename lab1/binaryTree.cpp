@@ -1,19 +1,5 @@
 #include "binaryTree.h"
-
-
-
-//Node* treeFind(Node* root, int key){
-//    while (root){
-//        if (root->key > key){
-//            root = root->left;
-//        }
-//        else if (root->key < key){
-//            root = root->right;
-//        }
-//        else return root;
-//    }
-//    return nullptr;
-//}
+#include <iostream>
 
 Node* treeAdd(Node* root, int key){
     Node* bufRoot = root;
