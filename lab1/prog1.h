@@ -1,14 +1,20 @@
 #ifndef CPP_PROG1_H
 #define CPP_PROG1_H
 
-struct arrayDouble {
+struct item {
+    int value;
+    int pos;
+};
+
+struct arrayInt {
     int n;
-    int* line;
+    item* line;
 };
 
 struct matrix {
-    int m;
-    arrayDouble *lines;
+    int m;    // Количество строк
+    int n;   // Максимальное кол-во столбцов
+    arrayInt *lines;
 };
 
 matrix* matrixInput();
