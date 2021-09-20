@@ -1,6 +1,5 @@
 #include "traktrisa.h"
 #include <iostream>
-#include <cmath>
 
 using std::cin, std::cout, std::endl;
 
@@ -44,6 +43,8 @@ int main(){
             double res = tr.getRadius(angle);
             if (res == -1.) {
                 cout << "Wrong angle\n";
+            } else if (res == -2){
+                cout << "Inf" << endl;
             } else {
                 cout << res << endl;
             }
