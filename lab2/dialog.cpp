@@ -6,8 +6,8 @@ namespace dialogSp{
     using std::cin, std::cout, std::endl;
     void dialogMenu(){
         std::string msgs[] = {"0. Exit", "1. Get coordinates", "2. Get arc length", "3. Get radius", "4. Get square",
-                              "5. Get square of surface", "6. Get volume of surface"};
-        int msgLength = 7;
+                              "5. Get square of surface", "6. Get volume of surface", "7. Get const of traktrisa"};
+        int msgLength = 8;
         int choice = -1;
         double a;
         cout << "Enter const of traktrisa\n";
@@ -66,8 +66,8 @@ namespace dialogSp{
                 double res = tr.getVolumeOfSurface();
                 cout << res << endl;
             }
-            else {
-                cout << "Wrong choice\n";
+            else if (choice == 7){
+                cout << tr.getA() << endl;
             }
 
             for (int i = 0; i < msgLength; i++){

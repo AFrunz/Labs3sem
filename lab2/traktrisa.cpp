@@ -22,7 +22,7 @@ double traktrisa::getRadius(double angle) const{
     if (angle == (M_PI / 2.)) {
         return -2.;
     }
-    return (this->a) / std::tan(angle);
+    return std::abs((this->a) / std::tan(angle));
 }
 
 

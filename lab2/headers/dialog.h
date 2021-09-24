@@ -1,6 +1,7 @@
 #ifndef CPP_DIALOG_H
 #define CPP_DIALOG_H
 #include "traktrisa.h"
+#include <iostream>
 
 namespace dialogSp {
     template <class T>
