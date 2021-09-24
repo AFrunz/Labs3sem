@@ -1,5 +1,5 @@
 #include <gtest//gtest.h>
-#include "traktrisa.h"
+#include "headers/traktrisa.h"
 #include <cmath>
 
 

@@ -1,12 +1,6 @@
-#include "traktrisa.h"
+#include "headers/traktrisa.h"
 #include <cmath>
 // explict
-
-
-traktrisa::traktrisa(double a0) {
-    a = a0;
-}
-
 
 double traktrisa::getA() const{
     return this->a;

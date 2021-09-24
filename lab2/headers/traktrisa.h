@@ -13,9 +13,10 @@ private:
     double a; // Константа трактрисы
 public:
     // Constructor
-    explicit traktrisa(double a0);
+    explicit traktrisa(double a0) {a = a0;}
     //    Получение a
     double getA() const;
+    void setA(double a0) {a = a0;}
     //    Площадь, ограниченная трактрисой и ее асимптотой
     double getSquare() const;
     //   Радиус кривизны
