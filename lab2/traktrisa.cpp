@@ -1,5 +1,6 @@
 #include "headers/traktrisa.h"
 #include <cmath>
+#include <stdexcept>
 // explict
 
 double traktrisa::getA() const{
@@ -17,20 +18,20 @@ double traktrisa::getSquare() const{
 //   Радиус кривизны
 double traktrisa::getRadius(double angle) const{
     if ((angle <= 0.) || (angle >= M_PI)) {
-        return -1.;
+        throw std::runtime_error("Wrong angle");
     }
-    if (angle == (M_PI / 2.)) {
-        return -2.;
-    }
+//    if (angle == (M_PI / 2.)) {
+//        return INF;
+//    }
     return std::abs((this->a) / std::tan(angle));
 }
 
 
 // Координаты точки от угла поворота
 dot traktrisa::getCoordinates(double angle) const{
+    // исключение
     if ((angle <= 0.) || (angle >= M_PI)) {
-        dot result{0., 0.};
-        return result;
+        throw  std::runtime_error("Wrong angle");
     }
     dot result{};
     result.x =  -(this->a) * (log(tan(angle / 2.)) + cos(angle));
@@ -41,10 +42,11 @@ dot traktrisa::getCoordinates(double angle) const{
 
 //  Длина дуги от точки (0, a)
 double traktrisa::getArcLength(double angle) const{
+    // исключение
     if ((angle <= 0.) || (angle >= M_PI)) {
-        return -1.;
+        throw std::runtime_error("Wrong angle");
     }
-    return -(this->a) * log(sin(angle));
+    return std::abs(-(this->a) * log(sin(angle)));
 }
 
 
@@ -56,5 +58,5 @@ double traktrisa::getSquareOfSurface() const{
 
 // Объем тела вращения
 double traktrisa::getVolumeOfSurface() const{
-    return M_PI * (this->a) * (this->a) * (this->a) / 3.;
+    return std::abs(M_PI * (this->a) * (this->a) * (this->a) / 3.);
 }

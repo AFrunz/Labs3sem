@@ -1,6 +1,9 @@
 #ifndef CPP_TRAKTRISA_H
 #define CPP_TRAKTRISA_H
 
+#define INF 1.7976931348623158E+308
+
+
 struct dot {
     double x;
     double y;
@@ -14,6 +17,17 @@ private:
 public:
     // Constructor
     explicit traktrisa(double a0) {a = a0;}
+    traktrisa() {a = 1.;}
+
+//    // Destructor
+//    ~traktrisa() = default;
+//
+//    // Assignment constructor
+//    traktrisa(const traktrisa& tr){
+//        a = tr.a;
+//    }
+
+
     //    Получение a
     double getA() const;
     void setA(double a0) {a = a0;}

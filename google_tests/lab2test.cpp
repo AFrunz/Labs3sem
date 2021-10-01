@@ -8,16 +8,12 @@
 // Угол меньше 0
 TEST(getCoord, negativeNum) {
     traktrisa tr(12.);
-    dot res = tr.getCoordinates(-1.);
-    EXPECT_DOUBLE_EQ(0., res.x);
-    EXPECT_DOUBLE_EQ(0., res.y);
+    ASSERT_ANY_THROW(tr.getCoordinates(-1.));
 }
 // Угол больше pi
 TEST(getCoord, morePiNum) {
     traktrisa tr(12.);
-    dot res = tr.getCoordinates(3.15);
-    EXPECT_DOUBLE_EQ(0., res.x);
-    EXPECT_DOUBLE_EQ(0., res.y);
+    ASSERT_ANY_THROW(tr.getCoordinates(3.15));
 }
 // Нормальный угол
 TEST(getCoord, normalSit) {
@@ -31,20 +27,12 @@ TEST(getCoord, normalSit) {
 
 TEST(getArcLen, negativeNum) {
     traktrisa tr(12.);
-    double res = tr.getArcLength(-1.);
-    EXPECT_DOUBLE_EQ(-1., res);
+    ASSERT_ANY_THROW(tr.getArcLength(-1.));
 }
 
 TEST(getArcLen, morePiNum) {
     traktrisa tr(12.);
-    double res = tr.getArcLength(M_PI);
-    EXPECT_DOUBLE_EQ(-1., res);
-}
-
-TEST(getArcLen, inf) {
-    traktrisa tr(12.);
-    double res = tr.getArcLength(M_PI / 2.);
-    EXPECT_DOUBLE_EQ(0, res);
+    ASSERT_ANY_THROW(tr.getArcLength(M_PI));
 }
 
 TEST(getArcLen, normalNum) {
@@ -59,20 +47,12 @@ TEST(getArcLen, normalNum) {
 
 TEST(getRadius, negativeNum) {
     traktrisa tr(12.);
-    double res = tr.getRadius(-1.);
-    EXPECT_DOUBLE_EQ(-1., res);
+    ASSERT_ANY_THROW(tr.getRadius(-1.));
 }
 
 TEST(getRadius, morePiNum) {
     traktrisa tr(12.);
-    double res = tr.getRadius(M_PI);
-    EXPECT_DOUBLE_EQ(-1., res);
-}
-
-TEST(getRadius, inf) {
-    traktrisa tr(12.);
-    double res = tr.getRadius(M_PI / 2.);
-    EXPECT_DOUBLE_EQ(-2, res);
+    ASSERT_ANY_THROW(tr.getRadius(M_PI));
 }
 
 TEST(getRadius, normalNum) {
@@ -112,6 +92,17 @@ TEST(Traktrisa, init_test) {
     traktrisa c(10.);
     double a = c.getA();
     EXPECT_DOUBLE_EQ(10., a);
+}
+
+TEST(Traktrisa, init_test_default){
+    traktrisa c;
+    EXPECT_EQ(1., c.getA());
+}
+
+TEST(Traktrisa, init_assigment){
+    traktrisa c(123.);
+    traktrisa d(c);
+    EXPECT_EQ(123, d.getA());
 }
 
 int main(int argc, char* argv[]){

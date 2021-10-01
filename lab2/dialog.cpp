@@ -19,36 +19,38 @@ namespace dialogSp{
 //        Получение координат
             if (choice == 1) {
                 cout << "Enter angle (0; pi)";
-               getNum(angle);
-                dot res = tr.getCoordinates(angle);
-                if (res.x == 0. && res.y == 0.) {
-                    cout << "Wrong angle\n";
-                } else {
+                getNum(angle);
+                try {
+                    dot res = tr.getCoordinates(angle);
                     cout << "X : " << res.x << " Y : " << res.y << endl;
+                }
+                catch(std::string& str) {
+                    std::cerr << str;
                 }
             }
 //        Получение длины дуги
             else if (choice == 2) {
                 cout << "Enter angle (0; pi)";
-                getNum(angle);
-                double res = tr.getArcLength(angle);
-                if (res == -1.) {
-                    cout << "Wrong angle\n";
-                } else {
+                try {
+                    getNum(angle);
+                    double res = tr.getArcLength(angle);
                     cout << res << endl;
                 }
+                catch (std::runtime_error& str){
+                    std::cerr << str.what();
+                }
+
             }
 //        Получение радиуса кривизны
             else if (choice == 3) {
                 cout << "Enter angle (0; pi)";
                 getNum(angle);
-                double res = tr.getRadius(angle);
-                if (res == -1.) {
-                    cout << "Wrong angle\n";
-                } else if (res == -2){
-                    cout << "Inf" << endl;
-                } else {
+                try{
+                    double res = tr.getRadius(angle);
                     cout << res << endl;
+                }
+                catch (std::string &str){
+                    std::cerr << str;
                 }
             }
 //        Получение площади полоски
