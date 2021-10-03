@@ -22,19 +22,30 @@ private:
     int nums[N];
 
 public:
+//    Конструкторы
     sequence();
     sequence(int a);
     sequence(int n, const int* numbers);
     sequence(const sequence& c);
+//    Добавление одной последовательности в конец другой
     const sequence operator +(const sequence& c) const;
-    friend std::ostream& operator<< (std::ostream &out, const sequence& outClass);
-    friend std::istream& operator>> (std::istream &input, sequence& inputClass);
+//    Добавление одного эл-та
     sequence& operator+= (int x);
+//    Частота встречаемости элемента
     int frequencyOfEl(int x) const;
+//    Получение первой возр или убыв подпоследовательности
+    sequence subSequence() const;
+//    Количество уникальных элементов
+    int groupNumber() const;
+//    Ввод
+    friend std::ostream& operator<< (std::ostream &out, const sequence& outClass);
+//    Вывод
+    friend std::istream& operator>> (std::istream &input, sequence& inputClass);
+//    Селекторы
     int getElementWithIndex(int index) const;
     int getCurrent() const;
-    int groupNumber() const;
-    sequence subSequence() const;
+
+
 private:
     int* sort() const;
 };

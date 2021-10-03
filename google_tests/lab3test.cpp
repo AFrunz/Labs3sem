@@ -59,13 +59,13 @@ TEST(merge, normal){
 TEST(add, full){
     int test_b[] = {8, 9, 10, 11, 12};
     sequence b(5, test_b);
-    EXPECT_ANY_THROW(b.add(144));
+    EXPECT_ANY_THROW(b += 144);
 }
 
 TEST(add, normal){
     int test_b[] = {8, 9, 10, 11};
     sequence b(4, test_b);
-    b.add(133);
+    b += 133;
     EXPECT_EQ(b.getCurrent(), 5);
     EXPECT_EQ(b.getElementWithIndex(0), 8);
     EXPECT_EQ(b.getElementWithIndex(1), 9);
