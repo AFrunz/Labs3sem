@@ -1,5 +1,4 @@
 #include <stdexcept>
-#include <stdarg.h>
 #include <iostream>
 #include "headers/sequence.h"
 
@@ -13,17 +12,11 @@ sequence::sequence(int a){
     nums[0] = a;
     current = 1;
 }
-sequence::sequence(int n, int first, ...){
+sequence::sequence(int n, const int* numbers){
     if (n > N) throw std::runtime_error("Too many elements");
-    va_list start;
-    va_start(start, first);
-    for (int i = 0; i < n; i++){
-        if (i == 0) nums[i] = first;
-        else {
-            nums[i] = va_arg(start, int);
-        }
+    for (int i = 0; i < n; i++, numbers++){
+        nums[i] = *numbers;
     }
-    va_end(start);
     sequence::current = n;
     sequence::max = N;
 }
@@ -34,29 +27,48 @@ sequence::sequence(const sequence& c){
         nums[i] = c.nums[i];
     }
 }
-sequence sequence::merge(const sequence& c) const{
+const sequence sequence::operator +(const sequence& c) const{
     int newCurrent = sequence::current + c.current;
-    if (newCurrent >= sequence::max) throw std::runtime_error("Too many elements");
+    if (newCurrent >= sequence::max) newCurrent = sequence::max;
     sequence res;
     for (int i = 0; i < newCurrent; i++){
         if (i < sequence::current){
-            res.add(sequence::nums[i]);
+            res += sequence::nums[i];
         }
         else {
-            res.add(c.nums[i - sequence::current]);
+            res += c.nums[i - sequence::current];
         }
     }
     return res;
 }
 
-void sequence::print() const{
-    for (int i = 0; i < this->current; i++){
-        std::cout << nums[i] << " ";
+std::ostream& operator<< (std::ostream &out, const sequence& outClass){
+    for (int i = 0; i < outClass.current; i++){
+        out << outClass.nums[i] << " ";
     }
-    std::cout << std::endl;
+    out << std::endl;
+    return out;
 }
 
-sequence& sequence::add(int x){
+std::istream& operator>> (std::istream &input, sequence& inputClass){
+    std::cout << "Enter number of numbers" << std::endl;
+    int n;
+    getNum(n);
+    while ((n + inputClass.current) > N || n <= 0){
+        std::cout << "Too much number of numbers, or negative number, repeat\n";
+        getNum(n);
+    }
+    int x;
+    for (int i = 0; i < n; i++){
+        std::cin >> x;
+        inputClass += x;
+    }
+    return input;
+}
+
+
+
+sequence& sequence::operator+=(int x) {
     if (current == max) throw std::runtime_error("Sequence is full");
     nums[current] = x;
     current++;
@@ -113,6 +125,60 @@ int sequence::groupNumber() const{
     return counter;
 }
 
-sequence* sequence::subSequence() const{
-    return nullptr;
+sequence sequence::subSequence() const{
+    int seqLength = 1;
+    int flag = 0; //-1 - down, 1 - up
+    sequence res;
+    if (sequence::current == 0) {                           //если посл-ть пустая
+        return res;
+    }
+    int a = sequence::nums[0];
+    for (int i = 1; i <= sequence::current; i++){           // Обход последовательности
+        if (i == sequence::current){                        // Последовательность закончилась
+            if (seqLength >= 3){
+                for (int j = i - seqLength; j < i; j++){
+                    res += sequence::nums[j];
+                }
+                return res;
+            }
+        }
+
+        if (sequence::nums[i] > a){                                     // Возрастающая
+            if (!flag || (flag == 1)){
+                seqLength++;
+                flag = 1;
+            }
+            else {
+                if (seqLength >= 3) {
+                    for (int j = i - seqLength; j < i; j++) {
+                        res += sequence::nums[j];
+                    }
+                    return res;
+                }
+                seqLength = 2;
+                flag = 1;
+            }
+        }
+        else if (sequence::nums[i] < a){                // Убывающая
+            if (!flag || (flag == -1)){
+                seqLength++;
+                flag = -1;
+            }
+            else {
+                if (seqLength >= 3){
+                    for (int j = i - seqLength; j < i; j++){
+                        res += sequence::nums[j];
+                    }
+                    return res;
+                }
+                seqLength = 2;
+                flag = -1;
+            }
+        }
+        else {
+            seqLength++;                                    //место для возможного исправления
+        }
+        a = sequence::nums[i];
+    }
+    return res;
 }
