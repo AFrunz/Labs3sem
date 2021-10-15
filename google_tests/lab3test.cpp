@@ -9,17 +9,17 @@ TEST(Construct, without_params){
 TEST(Construct, one_parametr){
     sequence a(12);
     EXPECT_EQ(a.getCurrent(), 1);
-    EXPECT_EQ(a.getElementWithIndex(0), 12);
+    EXPECT_EQ(a[0], 12);
 }
 
 TEST(Construct, many_parametrs){
     int test_n[] = {2, 3, 5, 7};
     sequence a(4, test_n);
     EXPECT_EQ(a.getCurrent(), 4);
-    EXPECT_EQ(a.getElementWithIndex(0), 2);
-    EXPECT_EQ(a.getElementWithIndex(1), 3);
-    EXPECT_EQ(a.getElementWithIndex(2), 5);
-    EXPECT_EQ(a.getElementWithIndex(3), 7);
+    EXPECT_EQ(a[0], 2);
+    EXPECT_EQ(a[1], 3);
+    EXPECT_EQ(a[2], 5);
+    EXPECT_EQ(a[3], 7);
 }
 
 TEST(Construct, copy){
@@ -27,8 +27,8 @@ TEST(Construct, copy){
     sequence a(2, test_n);
     sequence b(a);
     EXPECT_EQ(b.getCurrent(), 2);
-    EXPECT_EQ(b.getElementWithIndex(0), 3);
-    EXPECT_EQ(b.getElementWithIndex(1), 4);
+    EXPECT_EQ(b[0], 3);
+    EXPECT_EQ(b[1], 4);
 }
 
 TEST(merge, full){
@@ -36,13 +36,7 @@ TEST(merge, full){
     int test_b[] = {8, 9};
     sequence a(4, test_a);
     sequence b(2, test_b);
-    sequence c = a + b;
-    EXPECT_EQ(c.getCurrent(), 5);
-    EXPECT_EQ(c.getElementWithIndex(0), 1);
-    EXPECT_EQ(c.getElementWithIndex(1), 2);
-    EXPECT_EQ(c.getElementWithIndex(2), 3);
-    EXPECT_EQ(c.getElementWithIndex(3), 4);
-    EXPECT_EQ(c.getElementWithIndex(4), 8);
+    EXPECT_ANY_THROW(a + b);
 }
 
 TEST(merge, normal){
@@ -51,9 +45,9 @@ TEST(merge, normal){
     sequence b(2, test_b);
     sequence c = a + b;
     EXPECT_EQ(c.getCurrent(), 3);
-    EXPECT_EQ(c.getElementWithIndex(0), 1);
-    EXPECT_EQ(c.getElementWithIndex(1), 8);
-    EXPECT_EQ(c.getElementWithIndex(2), 9);
+    EXPECT_EQ(c[0], 1);
+    EXPECT_EQ(c[1], 8);
+    EXPECT_EQ(c[2], 9);
 }
 
 TEST(add, full){
@@ -67,11 +61,11 @@ TEST(add, normal){
     sequence b(4, test_b);
     b += 133;
     EXPECT_EQ(b.getCurrent(), 5);
-    EXPECT_EQ(b.getElementWithIndex(0), 8);
-    EXPECT_EQ(b.getElementWithIndex(1), 9);
-    EXPECT_EQ(b.getElementWithIndex(2), 10);
-    EXPECT_EQ(b.getElementWithIndex(3), 11);
-    EXPECT_EQ(b.getElementWithIndex(4), 133);
+    EXPECT_EQ(b[0], 8);
+    EXPECT_EQ(b[1], 9);
+    EXPECT_EQ(b[2], 10);
+    EXPECT_EQ(b[3], 11);
+    EXPECT_EQ(b[4], 133);
 }
 
 TEST(frequency, normal){
@@ -102,11 +96,11 @@ TEST(subSequence, all_up){
     sequence b(5, test_b);
     sequence c = b.subSequence();
     EXPECT_EQ(c.getCurrent(), 5);
-    EXPECT_EQ(c.getElementWithIndex(0), 1);
-    EXPECT_EQ(c.getElementWithIndex(1), 2);
-    EXPECT_EQ(c.getElementWithIndex(2), 3);
-    EXPECT_EQ(c.getElementWithIndex(3), 4);
-    EXPECT_EQ(c.getElementWithIndex(4), 5);
+    EXPECT_EQ(c[0], 1);
+    EXPECT_EQ(c[1], 2);
+    EXPECT_EQ(c[2], 3);
+    EXPECT_EQ(c[3], 4);
+    EXPECT_EQ(c[4], 5);
 }
 
 TEST(subSequence, all_down){
@@ -114,11 +108,11 @@ TEST(subSequence, all_down){
     sequence b(5, test_b);
     sequence c = b.subSequence();
     EXPECT_EQ(c.getCurrent(), 5);
-    EXPECT_EQ(c.getElementWithIndex(0), 5);
-    EXPECT_EQ(c.getElementWithIndex(1), 4);
-    EXPECT_EQ(c.getElementWithIndex(2), 3);
-    EXPECT_EQ(c.getElementWithIndex(3), 2);
-    EXPECT_EQ(c.getElementWithIndex(4), 1);
+    EXPECT_EQ(c[0], 5);
+    EXPECT_EQ(c[1], 4);
+    EXPECT_EQ(c[2], 3);
+    EXPECT_EQ(c[3], 2);
+    EXPECT_EQ(c[4], 1);
 }
 
 TEST(subSequence, normal){
@@ -126,10 +120,10 @@ TEST(subSequence, normal){
     sequence b(5, test_b);
     sequence c = b.subSequence();
     EXPECT_EQ(c.getCurrent(), 4);
-    EXPECT_EQ(c.getElementWithIndex(0), 4);
-    EXPECT_EQ(c.getElementWithIndex(1), 3);
-    EXPECT_EQ(c.getElementWithIndex(2), 2);
-    EXPECT_EQ(c.getElementWithIndex(3), 1);
+    EXPECT_EQ(c[0], 4);
+    EXPECT_EQ(c[1], 3);
+    EXPECT_EQ(c[2], 2);
+    EXPECT_EQ(c[3], 1);
 }
 
 TEST(subSequence, normal_2){
@@ -137,9 +131,9 @@ TEST(subSequence, normal_2){
     sequence b(5, test_b);
     sequence c = b.subSequence();
     EXPECT_EQ(c.getCurrent(), 3);
-    EXPECT_EQ(c.getElementWithIndex(0), 4);
-    EXPECT_EQ(c.getElementWithIndex(1), 3);
-    EXPECT_EQ(c.getElementWithIndex(2), 2);
+    EXPECT_EQ(c[0], 4);
+    EXPECT_EQ(c[1], 3);
+    EXPECT_EQ(c[2], 2);
 }
 
 TEST(subSequence, void_){

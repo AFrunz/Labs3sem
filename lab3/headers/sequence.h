@@ -1,6 +1,7 @@
-#ifndef CPP_SECUENCE_H
-#define CPP_SECUENCE_H
-#define N 5
+#ifndef CPP_SEQUENCE_H
+#define CPP_SEQUENCE_H
+
+const int MAX_OF_VECTOR = 5;
 
 template <class T>
 void getNum(T &a){
@@ -14,12 +15,24 @@ void getNum(T &a){
 }
 
 
-class [[maybe_unused]] sequence {
+class myArray {
+private:
+    int nums[MAX_OF_VECTOR];
+public:
+    myArray():nums{}{};
+    int& operator[](int num){
+        return nums[num];
+    }
+};
+
+
+
+
+class sequence {
 
 private:
-    int max;
     int current;
-    int nums[N];
+    int nums[MAX_OF_VECTOR];
 
 public:
 //    Конструкторы
@@ -29,8 +42,10 @@ public:
     sequence(const sequence& c);
 //    Добавление одной последовательности в конец другой
     const sequence operator +(const sequence& c) const;
+//    Добавление последовательности
+    sequence& operator+= (const sequence& x);
 //    Добавление одного эл-та
-    sequence& operator+= (int x);
+//    sequence& operator+=(int x);
 //    Частота встречаемости элемента
     int frequencyOfEl(int x) const;
 //    Получение первой возр или убыв подпоследовательности
@@ -42,14 +57,14 @@ public:
 //    Вывод
     friend std::istream& operator>> (std::istream &input, sequence& inputClass);
 //    Селекторы
-    int getElementWithIndex(int index) const;
+    int operator[](int index) const;
     int getCurrent() const;
 
 
 private:
-    int* sort() const;
+    myArray sort() const;
 };
 
 
 
-#endif //CPP_SECUENCE_H
+#endif //CPP_SEQUENCE_H

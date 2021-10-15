@@ -4,39 +4,39 @@
 
 
 sequence::sequence(){
-    max = N;
     current = 0;
 }
-sequence::sequence(int a){
-    max = N;
+
+sequence::sequence(int a):nums{}{
     nums[0] = a;
     current = 1;
 }
-sequence::sequence(int n, const int* numbers){
-    if (n > N) throw std::runtime_error("Too many elements");
-    for (int i = 0; i < n; i++, numbers++){
-        nums[i] = *numbers;
+
+sequence::sequence(int n, const int* numbers):nums{}{
+    if (n > MAX_OF_VECTOR) throw std::runtime_error("Too many elements");
+    for (int i = 0; i < n; i++){
+        nums[i] = numbers[i];
     }
-    sequence::current = n;
-    sequence::max = N;
+    current = n;
 }
-sequence::sequence(const sequence& c){
-    max = c.max;
+
+sequence::sequence(const sequence& c):nums{}{
     current = c.current;
     for (int i = 0; i < current; i++){
         nums[i] = c.nums[i];
     }
 }
-const sequence sequence::operator +(const sequence& c) const{
+
+const sequence sequence::operator+ (const sequence& c) const{
     int newCurrent = sequence::current + c.current;
-    if (newCurrent >= sequence::max) newCurrent = sequence::max;
+    if (newCurrent >= MAX_OF_VECTOR) throw std::runtime_error("Too many elements");
     sequence res;
     for (int i = 0; i < newCurrent; i++){
         if (i < sequence::current){
             res += sequence::nums[i];
         }
         else {
-            res += c.nums[i - sequence::current];
+            res +=c.nums[i - sequence::current];
         }
     }
     return res;
@@ -51,27 +51,29 @@ std::ostream& operator<< (std::ostream &out, const sequence& outClass){
 }
 
 std::istream& operator>> (std::istream &input, sequence& inputClass){
-    std::cout << "Enter number of numbers" << std::endl;
     int n;
     getNum(n);
-    while ((n + inputClass.current) > N || n <= 0){
-        std::cout << "Too much number of numbers, or negative number, repeat\n";
-        getNum(n);
+    if ((n + inputClass.current) > MAX_OF_VECTOR || n <= 0){
+        input.fail();
+        return input;
     }
     int x;
+    int* buf = new int[n];
     for (int i = 0; i < n; i++){
-        std::cin >> x;
-        inputClass += x;
+        getNum(buf[i]);
     }
+    inputClass = sequence(n, buf);
+    delete [] buf;
     return input;
 }
 
-
-
-sequence& sequence::operator+=(int x) {
-    if (current == max) throw std::runtime_error("Sequence is full");
-    nums[current] = x;
-    current++;
+sequence& sequence::operator+=(const sequence& x) {
+    int newCurrent = current + x.current;
+    if (newCurrent > MAX_OF_VECTOR) throw std::runtime_error("Too many elements");
+    for (int i = current; i < newCurrent; i++){
+        nums[i] = x[i - current];
+    }
+    current = newCurrent;
     return *this;
 }
 
@@ -82,7 +84,8 @@ int sequence::frequencyOfEl(int x) const{
     }
     return counter;
 }
-int sequence::getElementWithIndex(int index) const{
+
+int sequence::operator[](int index) const{
     if (index < 0) throw std::runtime_error("Negative index");
     if (index >= current) throw std::runtime_error("The index is greater than the number of elements");
     return nums[index];
@@ -92,8 +95,8 @@ int sequence::getCurrent() const{
     return current;
 }
 
-int* sequence::sort() const {
-    int *newNums = new int [N];
+myArray sequence::sort() const {
+    myArray newNums;
     for (int i = 0; i < current; i++){
         newNums[i] = nums[i];
     }
@@ -111,7 +114,7 @@ int* sequence::sort() const {
 
 int sequence::groupNumber() const{
     if (current == 0) return 0;
-    int* arr = sort();
+    myArray arr = sort();
     int x;
     int counter = 1;
     x = arr[0];
@@ -121,7 +124,6 @@ int sequence::groupNumber() const{
             counter++;
         }
     }
-    delete[] arr;
     return counter;
 }
 
@@ -137,21 +139,21 @@ sequence sequence::subSequence() const{
         if (i == sequence::current){                        // Последовательность закончилась
             if (seqLength >= 3){
                 for (int j = i - seqLength; j < i; j++){
-                    res += sequence::nums[j];
+                    res +=sequence::nums[j];
                 }
                 return res;
             }
         }
 
         if (sequence::nums[i] > a){                                     // Возрастающая
-            if (!flag || (flag == 1)){
+            if ((flag == 0) || (flag == 1)){
                 seqLength++;
                 flag = 1;
             }
             else {
                 if (seqLength >= 3) {
                     for (int j = i - seqLength; j < i; j++) {
-                        res += sequence::nums[j];
+                        res +=sequence::nums[j];
                     }
                     return res;
                 }
@@ -160,14 +162,14 @@ sequence sequence::subSequence() const{
             }
         }
         else if (sequence::nums[i] < a){                // Убывающая
-            if (!flag || (flag == -1)){
+            if ((flag == 0) || (flag == -1)){
                 seqLength++;
                 flag = -1;
             }
             else {
                 if (seqLength >= 3){
                     for (int j = i - seqLength; j < i; j++){
-                        res += sequence::nums[j];
+                        res +=sequence::nums[j];
                     }
                     return res;
                 }
@@ -182,3 +184,5 @@ sequence sequence::subSequence() const{
     }
     return res;
 }
+
+
