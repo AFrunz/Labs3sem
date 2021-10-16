@@ -1,7 +1,7 @@
 #ifndef CPP_SEQUENCE_H
 #define CPP_SEQUENCE_H
 
-const int MAX_OF_VECTOR = 5;
+//const int MAX_OF_VECTOR = 5;
 
 template <class T>
 void getNum(T &a){
@@ -17,22 +17,30 @@ void getNum(T &a){
 
 class myArray {
 private:
-    int nums[MAX_OF_VECTOR];
+    int* nums;
 public:
-    myArray():nums{}{};
+    myArray(int k){
+        nums = new int[k];
+    }
+    myArray(){
+        nums = nullptr;
+    }
     int& operator[](int num){
         return nums[num];
     }
+    ~myArray(){
+        delete [] nums;
+    }
 };
-
 
 
 
 class sequence {
 
 private:
+    int capacity;
     int current;
-    int nums[MAX_OF_VECTOR];
+    int* nums;
 
 public:
 //    Конструкторы
@@ -40,12 +48,14 @@ public:
     sequence(int a);
     sequence(int n, const int* numbers);
     sequence(const sequence& c);
-//    Добавление одной последовательности в конец другой
-    const sequence operator +(const sequence& c) const;
-//    Добавление последовательности
+    sequence(sequence&& c):current(c.current), nums(c.nums), capacity(c.capacity){
+        c.nums = nullptr;
+        c.capacity = 0;
+    };
+//    Сложение последовательностей
+    const sequence operator+ (const sequence& c) const;
+//    Добавление последовательности в конец
     sequence& operator+= (const sequence& x);
-//    Добавление одного эл-та
-//    sequence& operator+=(int x);
 //    Частота встречаемости элемента
     int frequencyOfEl(int x) const;
 //    Получение первой возр или убыв подпоследовательности
@@ -57,12 +67,19 @@ public:
 //    Вывод
     friend std::istream& operator>> (std::istream &input, sequence& inputClass);
 //    Селекторы
-    int operator[](int index) const;
+    int& operator[](int index) const;
     int getCurrent() const;
-
+//    Оператор присваивания копированием
+    sequence& operator= (const sequence& c);
+//    Оператор присваивания копированием
+    sequence& operator= (sequence&& c);
+//    Деструктор
+    ~sequence(){
+        if (nums) delete [] nums;
+    }
 
 private:
-    myArray sort() const;
+    int* sort() const;
 };
 
 

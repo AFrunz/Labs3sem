@@ -21,7 +21,7 @@ namespace dialog3{
         std::string choices[] = {"0. Exit", "1. Add one el", "2. Frequency Of El", "3. Get first ascending "
                                 "or descending sequence ", "4. Unique el number", "5. Get el with index",
                                 "6. Get current", "7. Add sequence of el-s"};
-        std::cout << "Max: "<< MAX_OF_VECTOR << std::endl;
+//        std::cout << "Max: "<< MAX_OF_VECTOR << std::endl;
         sequence q;
         inputMyClass(q);
         int choice = -1;

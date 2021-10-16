@@ -1,6 +1,6 @@
 #include "headers/dialog.h"
 #include <iostream>
-
+//sstream или тп для тестирования вывода
 
 int main(){
     try {

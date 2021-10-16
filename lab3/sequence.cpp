@@ -1,44 +1,65 @@
 #include <stdexcept>
 #include <iostream>
 #include "headers/sequence.h"
+#include <cstring>
 
 
 sequence::sequence(){
+    nums = nullptr;
     current = 0;
+    capacity = 0;
 }
 
-sequence::sequence(int a):nums{}{
+sequence::sequence(int a){
+    nums = new int;
     nums[0] = a;
     current = 1;
+    capacity = 1;
 }
-
-sequence::sequence(int n, const int* numbers):nums{}{
-    if (n > MAX_OF_VECTOR) throw std::runtime_error("Too many elements");
-    for (int i = 0; i < n; i++){
-        nums[i] = numbers[i];
-    }
+//!!!
+sequence::sequence(int n, const int* numbers){
+    nums = new int[n];
+    memcpy(nums, numbers, n * sizeof(int));
     current = n;
+    capacity = n;
 }
 
-sequence::sequence(const sequence& c):nums{}{
+sequence::sequence(const sequence& c){
     current = c.current;
-    for (int i = 0; i < current; i++){
-        nums[i] = c.nums[i];
+    nums = new int[c.capacity];
+    memcpy(nums, c.nums, current * sizeof(int));
+    capacity = c.capacity;
+}
+
+sequence& sequence::operator= (const sequence& c){
+    if (this != &c){
+        if (nums){
+            delete [] nums;
+            nums = nullptr;
+        }
+        if ((current = c.current) != 0){
+            nums = new int [c.capacity];
+            memcpy(nums, c.nums, current * sizeof(int));
+        }
+        capacity = c.capacity;
     }
+    return *this;
+}
+
+sequence& sequence::operator= (sequence&& c){
+    current = c.current;
+    int* bufCells = nums;
+    nums = c.nums;
+    capacity = c.capacity;
+    if (bufCells) delete[] bufCells;
+    return *this;
 }
 
 const sequence sequence::operator+ (const sequence& c) const{
     int newCurrent = sequence::current + c.current;
-    if (newCurrent >= MAX_OF_VECTOR) throw std::runtime_error("Too many elements");
     sequence res;
-    for (int i = 0; i < newCurrent; i++){
-        if (i < sequence::current){
-            res += sequence::nums[i];
-        }
-        else {
-            res +=c.nums[i - sequence::current];
-        }
-    }
+    res += *this;
+    res += c;
     return res;
 }
 
@@ -53,10 +74,6 @@ std::ostream& operator<< (std::ostream &out, const sequence& outClass){
 std::istream& operator>> (std::istream &input, sequence& inputClass){
     int n;
     getNum(n);
-    if ((n + inputClass.current) > MAX_OF_VECTOR || n <= 0){
-        input.fail();
-        return input;
-    }
     int x;
     int* buf = new int[n];
     for (int i = 0; i < n; i++){
@@ -69,11 +86,20 @@ std::istream& operator>> (std::istream &input, sequence& inputClass){
 
 sequence& sequence::operator+=(const sequence& x) {
     int newCurrent = current + x.current;
-    if (newCurrent > MAX_OF_VECTOR) throw std::runtime_error("Too many elements");
-    for (int i = current; i < newCurrent; i++){
-        nums[i] = x[i - current];
+    if (capacity < newCurrent){
+        while (capacity < newCurrent){
+            capacity *= 2;
+        }
+        int* bufCell = new int[capacity];
+        memcpy(bufCell, nums, current * sizeof(int));
+        memcpy(bufCell + current, x.nums, x.current * sizeof(int));
+        delete[] nums;
+        nums = bufCell;
+        current = newCurrent;
     }
-    current = newCurrent;
+    else {
+        memcpy(nums + current, x.nums, x.current);
+    }
     return *this;
 }
 
@@ -85,7 +111,8 @@ int sequence::frequencyOfEl(int x) const{
     return counter;
 }
 
-int sequence::operator[](int index) const{
+//!!!
+int& sequence::operator[](int index) const{
     if (index < 0) throw std::runtime_error("Negative index");
     if (index >= current) throw std::runtime_error("The index is greater than the number of elements");
     return nums[index];
@@ -95,26 +122,16 @@ int sequence::getCurrent() const{
     return current;
 }
 
-myArray sequence::sort() const {
-    myArray newNums;
-    for (int i = 0; i < current; i++){
-        newNums[i] = nums[i];
-    }
-    for (int i = 0; i < current - 1; i++){
-        for (int j = i + 1; j < current; j++){
-            if (newNums[i] > newNums[j]){
-                int buf = newNums[i];
-                newNums[i] = newNums[j];
-                newNums[j] = buf;
-            }
-        }
-    }
+int* sequence::sort() const {
+    int* newNums = new int[current];
+    memcpy(newNums, nums, current);
+    std::sort(newNums, newNums + current);
     return newNums;
 }
 
 int sequence::groupNumber() const{
     if (current == 0) return 0;
-    myArray arr = sort();
+    int* arr = sort();
     int x;
     int counter = 1;
     x = arr[0];
