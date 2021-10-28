@@ -1,6 +1,6 @@
 #include <stdexcept>
 #include <iostream>
-#include "headers/sequence.h"
+#include "headers/sequence.hpp"
 #include <cstring>
 
 
@@ -16,7 +16,7 @@ sequence::sequence(int a){
     current = 1;
     capacity = 1;
 }
-//!!!
+
 sequence::sequence(int n, const int* numbers){
     nums = new int[n];
     memcpy(nums, numbers, n * sizeof(int));
@@ -29,6 +29,14 @@ sequence::sequence(const sequence& c){
     nums = new int[c.capacity];
     memcpy(nums, c.nums, current * sizeof(int));
     capacity = c.capacity;
+//    std::cout << "Copy constructor\n";
+}
+
+sequence::sequence(sequence&& c):current(c.current), nums(c.nums), capacity(c.capacity){
+    c.nums = nullptr;
+    c.capacity = 0;
+    c.current = 0;
+//    std::cout << "Relocate constructor\n";
 }
 
 sequence& sequence::operator= (const sequence& c){
@@ -43,15 +51,21 @@ sequence& sequence::operator= (const sequence& c){
         }
         capacity = c.capacity;
     }
+//    std::cout << "Copy equal\n";
     return *this;
 }
 
 sequence& sequence::operator= (sequence&& c){
-    current = c.current;
-    int* bufCells = nums;
-    nums = c.nums;
-    capacity = c.capacity;
-    if (bufCells) delete[] bufCells;
+    if (this != &c){
+        current = c.current;
+        int* bufCells = nums;
+        nums = c.nums;
+        c.nums = bufCells;
+        capacity = c.capacity;
+        c.capacity = 0;
+        c.current = 0;
+    }
+//    std::cout << "Relocate equal\n";
     return *this;
 }
 
@@ -73,11 +87,16 @@ std::ostream& operator<< (std::ostream &out, const sequence& outClass){
 
 std::istream& operator>> (std::istream &input, sequence& inputClass){
     int n;
-    getNum(n);
+    input >> n;
+    if (!std::cin.good()) return input;
     int x;
     int* buf = new int[n];
     for (int i = 0; i < n; i++){
-        getNum(buf[i]);
+        input >> buf[i];
+        if (!std::cin.good()){
+            delete [] buf;
+            return input;
+        }
     }
     inputClass = sequence(n, buf);
     delete [] buf;
@@ -87,8 +106,9 @@ std::istream& operator>> (std::istream &input, sequence& inputClass){
 sequence& sequence::operator+=(const sequence& x) {
     int newCurrent = current + x.current;
     if (capacity < newCurrent){
+//        if (!capacity) capacity = 1;
         while (capacity < newCurrent){
-            capacity *= 2;
+            capacity += 10;
         }
         int* bufCell = new int[capacity];
         memcpy(bufCell, nums, current * sizeof(int));
@@ -98,7 +118,8 @@ sequence& sequence::operator+=(const sequence& x) {
         current = newCurrent;
     }
     else {
-        memcpy(nums + current, x.nums, x.current);
+        memcpy(nums + current, x.nums, x.current * sizeof(int));
+        current = newCurrent;
     }
     return *this;
 }
@@ -111,8 +132,8 @@ int sequence::frequencyOfEl(int x) const{
     return counter;
 }
 
-//!!!
-int& sequence::operator[](int index) const{
+
+int& sequence::operator[](int index){
     if (index < 0) throw std::runtime_error("Negative index");
     if (index >= current) throw std::runtime_error("The index is greater than the number of elements");
     return nums[index];
@@ -122,10 +143,19 @@ int sequence::getCurrent() const{
     return current;
 }
 
-int* sequence::sort() const {
+
+// Sort по убыванию с лямбдой
+int* sequence::sort(bool flag = false) const {
     int* newNums = new int[current];
-    memcpy(newNums, nums, current);
-    std::sort(newNums, newNums + current);
+    memcpy(newNums, nums, current * sizeof(int));
+    if (flag){
+        std::sort(newNums, newNums + current - 1, [](int a, int b){
+            return a > b;
+        });
+    }
+    else {
+        std::sort(newNums, newNums + current);
+    }
     return newNums;
 }
 
@@ -161,7 +191,6 @@ sequence sequence::subSequence() const{
                 return res;
             }
         }
-
         if (sequence::nums[i] > a){                                     // Возрастающая
             if ((flag == 0) || (flag == 1)){
                 seqLength++;

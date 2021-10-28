@@ -1,6 +1,6 @@
 #include "headers/dialog.h"
 #include <iostream>
-#include "headers/sequence.h"
+#include "headers/sequence.hpp"
 
 namespace dialog3{
 

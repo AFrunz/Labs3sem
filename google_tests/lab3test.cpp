@@ -1,5 +1,8 @@
 #include <gtest//gtest.h>
-#include "headers/sequence.h"
+#include "headers/sequence.hpp"
+#include <iostream>
+
+//std::move
 
 TEST(Construct, without_params){
     sequence a;
@@ -36,7 +39,7 @@ TEST(merge, full){
     int test_b[] = {8, 9};
     sequence a(4, test_a);
     sequence b(2, test_b);
-    EXPECT_ANY_THROW(a + b);
+    EXPECT_NO_THROW(a + b);
 }
 
 TEST(merge, normal){
@@ -53,7 +56,7 @@ TEST(merge, normal){
 TEST(add, full){
     int test_b[] = {8, 9, 10, 11, 12};
     sequence b(5, test_b);
-    EXPECT_ANY_THROW(b += 144);
+    EXPECT_NO_THROW(b += 144);
 }
 
 TEST(add, normal){
@@ -75,6 +78,54 @@ TEST(frequency, normal){
     EXPECT_EQ(b.frequencyOfEl(10), 3);
     EXPECT_EQ(b.frequencyOfEl(12), 0);
 }
+
+TEST(output, _default){
+    int test_b[] = {8, 8, 10, 10, 10};
+    sequence b(5, test_b);
+    std::ostringstream output;
+    output << b;
+    EXPECT_EQ(output.str(), "8 8 10 10 10 \n");
+}
+
+TEST(input, _default){
+    std::string str = "4 1 2 3 4";
+    std::istringstream input(str);
+    sequence b;
+    std::cout << input.str();
+    input >> b;
+    EXPECT_EQ(b.getCurrent(), 4);
+    EXPECT_EQ(b[0], 1);
+    EXPECT_EQ(b[1], 2);
+    EXPECT_EQ(b[2], 3);
+    EXPECT_EQ(b[3], 4);
+}
+
+
+
+TEST(copyConstructor, _default){
+    sequence a(1);
+    sequence b(2);
+    b = a;
+    sequence c = a;
+    EXPECT_EQ(b.getCurrent(), 1);
+    EXPECT_EQ(b[0], 1);
+    EXPECT_EQ(a[0], 1);
+    EXPECT_EQ(c[0], 1);
+    EXPECT_EQ(c.getCurrent(), 1);
+}
+
+
+TEST(relocateConstructor, _default){
+    sequence a(1);
+    sequence b = std::move(a);
+    a = std::move(b);
+    EXPECT_EQ(b.getCurrent(), 0);
+    EXPECT_EQ(a.getCurrent(), 1);
+    EXPECT_EQ(a[0], 1);
+}
+
+
+
 
 //TEST(sort, normal_1){
 //    sequence b(5, 10, 3, 1, 12, 14);
@@ -142,6 +193,33 @@ TEST(subSequence, void_){
     sequence c = b.subSequence();
     EXPECT_EQ(c.getCurrent(), 0);
 }
+
+//TEST(sort, _decrease){
+//    int test_b[] = {1, 4, 1, 4, 1};
+//    sequence b(5, test_b);
+////    int* p = b.sort(true);
+//    std::sort(test_b, test_b + 5, [](int a, int b){
+//        return a > b;
+//    });
+//    EXPECT_EQ(test_b[0], 4);
+//    EXPECT_EQ(test_b[1], 4);
+//    EXPECT_EQ(test_b[2], 1);
+//    EXPECT_EQ(test_b[3], 1);
+//    EXPECT_EQ(test_b[4], 1);
+//
+//}
+//TEST(sort, decrease){
+//    int test_b[] = {1, 4, 1, 4, 1};
+//    sequence b(5, test_b);
+//    int* p = b.sort(true);
+//    EXPECT_EQ(b[0], 1);
+//    EXPECT_EQ(p[0], 4);
+//    EXPECT_EQ(p[1], 4);
+//    EXPECT_EQ(p[2], 1);
+//    EXPECT_EQ(p[3], 1);
+//    EXPECT_EQ(p[4], 1);
+//
+//}
 
 
 int main(int argc, char* argv[]){
