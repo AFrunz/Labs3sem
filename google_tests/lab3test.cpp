@@ -107,6 +107,8 @@ TEST(copyConstructor, _default){
     sequence b(2);
     b = a;
     sequence c = a;
+
+
     EXPECT_EQ(b.getCurrent(), 1);
     EXPECT_EQ(b[0], 1);
     EXPECT_EQ(a[0], 1);

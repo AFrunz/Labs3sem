@@ -4,14 +4,16 @@
 
 
 template <class T>
-void getNum(T &a){
+int getNum(T &a){
     std::cin >> a;
+    if (std::cin.eof()) return -1;
     while (!std::cin.good()){
         std::cin.clear();
-        std::cin.ignore(1024, '\n');
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max() , '\n');
         std::cout << "Wrong input, repeat" << std::endl;
         std::cin >> a;
     }
+    return 0;
 }
 
 

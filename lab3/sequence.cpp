@@ -88,12 +88,12 @@ std::ostream& operator<< (std::ostream &out, const sequence& outClass){
 std::istream& operator>> (std::istream &input, sequence& inputClass){
     int n;
     input >> n;
-    if (!std::cin.good()) return input;
+    if (!input.good()) return input;
     int x;
     int* buf = new int[n];
     for (int i = 0; i < n; i++){
         input >> buf[i];
-        if (!std::cin.good()){
+        if (!input.good()){
             delete [] buf;
             return input;
         }
